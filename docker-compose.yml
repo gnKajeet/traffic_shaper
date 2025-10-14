@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  shaper:
+    build: ./shaper
+    platform: linux/arm64
+    container_name: traffic_shaper
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    sysctls:
+      - net.ipv4.ip_forward=1
+    ports:
+      - "127.0.0.1:5000:5000"
+    networks:
+      server_net:
+        ipv4_address: 172.21.0.2
+      client_net:
+        ipv4_address: 172.20.0.2
+      
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  iperf_server:
+    build: ./iperf
+    platform: linux/arm64
+    container_name: iperf_server
+    networks:
+      server_net:
+        ipv4_address: 172.21.0.3
+    healthcheck:
+      test: ["CMD", "pgrep", "iperf3"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  iperf_client:
+    build: ./iperf_client
+    platform: linux/arm64
+    container_name: iperf_client
+    cap_add:
+      - NET_ADMIN
+    depends_on:
+      shaper:
+        condition: service_healthy
+      iperf_server:
+        condition: service_healthy
+    networks:
+      client_net:
+        ipv4_address: 172.20.0.3
+    # Uses the image built from iperf_client/Dockerfile which has iperf3 installed.
+    # Default command runs iperf3 client to 172.21.0.3 for 10s. Override via `command:` if needed.
+
+networks:
+  client_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+  server_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16

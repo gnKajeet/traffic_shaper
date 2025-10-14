@@ -1,0 +1,71 @@
+{
+  "no_shaping": {
+    "description": "No traffic shaping - baseline test",
+    "type": "none"
+  },
+  "fiber_1gig": {
+    "description": "1 Gigabit fiber connection",
+    "type": "cake",
+    "bandwidth": "1gbit",
+    "rtt": "5ms"
+  },
+  "residential_cable": {
+    "description": "Typical cable modem: 100Mbps, 20ms latency",
+    "type": "cake",
+    "bandwidth": "100mbit",
+    "rtt": "20ms",
+    "features": ["diffserv4"]
+  },
+  "residential_dsl": {
+    "description": "DSL connection: 25Mbps, 40ms latency",
+    "type": "cake",
+    "bandwidth": "25mbit",
+    "rtt": "40ms"
+  },
+  "mobile_5g": {
+    "description": "5G mobile connection",
+    "type": "netem",
+    "delay": "30ms",
+    "jitter": "10ms",
+    "loss": "0.5%",
+    "rate": "200mbit"
+  },
+  "mobile_4g": {
+    "description": "4G LTE with variable latency",
+    "type": "netem",
+    "delay": "50ms",
+    "jitter": "20ms",
+    "loss": "1%",
+    "rate": "50mbit"
+  },
+  "mobile_3g": {
+    "description": "3G connection with high latency",
+    "type": "netem",
+    "delay": "150ms",
+    "jitter": "50ms",
+    "loss": "2%",
+    "rate": "5mbit"
+  },
+  "satellite": {
+    "description": "Satellite internet with very high latency",
+    "type": "netem",
+    "delay": "600ms",
+    "jitter": "50ms",
+    "loss": "0.5%",
+    "rate": "25mbit"
+  },
+  "congested_network": {
+    "description": "Heavily congested network",
+    "type": "netem",
+    "delay": "100ms",
+    "jitter": "30ms",
+    "loss": "5%",
+    "rate": "10mbit"
+  },
+  "throttled_isp": {
+    "description": "ISP throttling during peak hours",
+    "type": "cake",
+    "bandwidth": "5mbit",
+    "rtt": "50ms"
+  }
+}
