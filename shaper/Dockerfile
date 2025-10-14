@@ -7,6 +7,7 @@ RUN apt-get update \
          iproute2 \
          iptables \
          iputils-ping \
+         procps \
          python3 \
          python3-flask \
          ca-certificates \
